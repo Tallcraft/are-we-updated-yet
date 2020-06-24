@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Are we updated yet?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <script>
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      const graphql = JSON.stringify({
+        query:
+          'query {\n  mcServer(serverId: "survival"){\n    version\n  }\n}',
+        variables: {},
+      });
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: graphql,
+        redirect: "follow",
+      };
+
+      const answer = document.createElement("h1");
+
+      fetch("https://api.tallcraft.com", requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.data.mcServer.version.startsWith("1.16")) {
+            answer.innerText = "YES 🥳";
+          } else {
+            answer.innerText = "No ⌛";
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          answer.innerText = "I don't know 😕";
+        })
+        .finally(() => {
+          document.body.appendChild(answer);
+        });
+    </script>
+  </body>
+</html>
